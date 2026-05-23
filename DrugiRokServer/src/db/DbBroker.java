@@ -40,22 +40,28 @@ public class DbBroker {
 
         String upit = "SELECT * FROM admin "
                 + "WHERE mejl = ? AND lozinka = ?";
-        Admin rez = new Admin();
+        Admin rez = null;
 
         PreparedStatement ps = konekcija.prepareStatement(upit);
         ps.setString(1, admin.getMejl());
         ps.setString(2, admin.getLozinka());
 
         ResultSet rs = ps.executeQuery();
+        
         if (rs.next()) {
+            rez = new Admin();
             rez.setIme(rs.getString("ime"));
             rez.setPrezime(rs.getString("prezime"));
             rez.setMejl(rs.getString("mejl"));
-
         }
 
         disconnect();
         return rez;
+    }
+    
+    public void dodajKorisnika(){
+    
+        
     }
 
 }

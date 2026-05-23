@@ -7,6 +7,7 @@ package server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.swing.JLabel;
 
 /**
  *
@@ -14,14 +15,24 @@ import java.net.Socket;
  */
 public class Server {
 
-    private boolean signal;
+    private boolean signal = false;
+    private ServerSocket ss;
+    private static Server instance;
 
-    public void pokreniServer() throws IOException {
+    public static Server getInstance() {
+        if (instance == null) {
+            instance = new Server();
+        }
+        return instance;
+    }
 
-        ServerSocket ss = new ServerSocket(9000);
+    public void pokreniServer(JLabel lblStatus) throws IOException {
+
+        ss = new ServerSocket(9000);
         System.out.println("Server je pokrenut ...");
+        lblStatus.setText("POKRENUT");
 
-        while (true) {
+        while (signal) {
 
             Socket ks = ss.accept();
             System.out.println("Klijent se povezao ...");
@@ -32,9 +43,13 @@ public class Server {
 
     }
 
-    public void zaustaviServer() {
-        
-        
+    public void zaustaviServer(JLabel lblStatus) throws IOException {
+
+        signal = false;
+        ss.close();
+        System.out.println("Server je zaustavljen ...");
+        lblStatus.setText("ZAUSTAVLJEN");
+
     }
 
 }
