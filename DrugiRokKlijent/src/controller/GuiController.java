@@ -7,8 +7,9 @@ package controller;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import domen.Korisnik;
 import java.net.Socket;
-import domen.Admin;
+import komunikacija.Odgovor;
 import komunikacija.Operacija;
 import komunikacija.Zahtev;
 
@@ -42,26 +43,25 @@ public class GuiController {
         }
     }
 
-    public Admin prijava(Admin korisnik) {
+    public Korisnik prijava(Korisnik korisnik) throws Exception {
 
         Zahtev zahtev = new Zahtev();
         zahtev.setKorisnik(korisnik);
         zahtev.setOperacija(Operacija.PRIJAVA);
-        Admin korisnikRez = null;
+        Korisnik korisnikRez = null;
 
-        try {
-            // slanje zahteva
-            izlazni.writeObject(zahtev);
-            izlazni.flush();
+        // slanje zahteva
+        izlazni.writeObject(zahtev);
+        izlazni.flush();
 
-            // primanje odgovora
-            korisnikRez = (Admin) ulazni.readObject();
-        } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-
+        // primanje i rastavljanje odgovora
+        Odgovor odg = (Odgovor) ulazni.readObject();
+        if (odg.getEx() == null) {
+            korisnikRez = odg.getKorisnik();
+            return korisnikRez;
+        } else {
+            throw odg.getEx();
         }
-
-        return korisnikRez;
 
     }
 

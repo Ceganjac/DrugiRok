@@ -1,27 +1,26 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JDialog.java to edit this template
  */
 package ui;
 
 import controller.GuiController;
-import domen.Admin;
+import domen.Korisnik;
 import javax.swing.JOptionPane;
-
 
 /**
  *
  * @author Aleksandar Čeganjac
  */
-public class PrijavaFrm extends javax.swing.JFrame {
+public class PrijavaKorisnik extends javax.swing.JDialog {
 
     /**
-     * Creates new form Glavnifrejm
+     * Creates new form PrijavaKorisnik
      */
-    public PrijavaFrm() {
+    public PrijavaKorisnik(java.awt.Frame parent, boolean modal) {
+        super(parent, modal);
         initComponents();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -34,15 +33,16 @@ public class PrijavaFrm extends javax.swing.JFrame {
 
         lblMejl = new javax.swing.JLabel();
         lblLozinka = new javax.swing.JLabel();
-        txtMejl = new javax.swing.JTextField();
+        txtKorisnickoIme = new javax.swing.JTextField();
         txtLozinka = new javax.swing.JTextField();
         btnPrijaviSe = new javax.swing.JButton();
+        lblMejl1 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        lblMejl.setText("Mejl adresa : ");
+        lblMejl.setText("Korisničko ime:");
 
-        lblLozinka.setText("Lozinka :");
+        lblLozinka.setText("Korisnička sifra:");
 
         btnPrijaviSe.setText("Prijavi se");
         btnPrijaviSe.addActionListener(new java.awt.event.ActionListener() {
@@ -51,6 +51,10 @@ public class PrijavaFrm extends javax.swing.JFrame {
             }
         });
 
+        lblMejl1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
+        lblMejl1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMejl1.setText("Klijentska prijava");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -58,6 +62,7 @@ public class PrijavaFrm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblMejl1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPrijaviSe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -65,17 +70,19 @@ public class PrijavaFrm extends javax.swing.JFrame {
                             .addComponent(lblLozinka, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtMejl, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                            .addComponent(txtKorisnickoIme, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                             .addComponent(txtLozinka))))
                 .addGap(50, 50, 50))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addGap(31, 31, 31)
+                .addComponent(lblMejl1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMejl, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtMejl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtKorisnickoIme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLozinka, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -89,24 +96,29 @@ public class PrijavaFrm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPrijaviSeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrijaviSeActionPerformed
-        Admin korisnikR = new Admin();
-        korisnikR.setMejl(txtMejl.getText());
-        korisnikR.setLozinka(txtLozinka.getText());
-        
-        //pozivanje GuiController-a
-        Admin korisnikRez = GuiController.vratiInstancu().prijava(korisnikR);
-        
-        if(korisnikRez == null){
-            JOptionPane.showMessageDialog(this, "Nema korisnika sa unetim kredencijalima !",
-                    "GREŠKA", JOptionPane.ERROR_MESSAGE);
-            return;
+
+        try {
+            Korisnik korisnikRez = null;
+            
+            Korisnik korisnikPoc = new Korisnik();
+            korisnikPoc.setKorisnickoIme(txtKorisnickoIme.getText());
+            korisnikPoc.setLozinka(txtLozinka.getText());
+            
+            //pozivanje GuiController-a
+            korisnikRez = GuiController.vratiInstancu().prijava(korisnikPoc);
+            
+            if(korisnikRez == null){
+                JOptionPane.showMessageDialog(this, "Nema korisnika sa "
+                        + "datim kredencijalima", "GREŠKA", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            dispose();
+            GlavniFrm glavni = new GlavniFrm();
+            glavni.setVisible(true);
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        
-        GlavniFrm frejm = new GlavniFrm(korisnikRez);
-        frejm.setLocationRelativeTo(null);
-        frejm.setVisible(true);
-        
-        
+
     }//GEN-LAST:event_btnPrijaviSeActionPerformed
 
     /**
@@ -117,7 +129,9 @@ public class PrijavaFrm extends javax.swing.JFrame {
     private javax.swing.JButton btnPrijaviSe;
     private javax.swing.JLabel lblLozinka;
     private javax.swing.JLabel lblMejl;
+    private javax.swing.JLabel lblMejl1;
+    private javax.swing.JTextField txtKorisnickoIme;
     private javax.swing.JTextField txtLozinka;
-    private javax.swing.JTextField txtMejl;
     // End of variables declaration//GEN-END:variables
+
 }

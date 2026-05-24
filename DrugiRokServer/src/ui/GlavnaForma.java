@@ -4,9 +4,11 @@
  */
 package ui;
 
+import db.DbBroker;
 import domen.Admin;
 import domen.Korisnik;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import server.Server;
@@ -221,7 +223,12 @@ public class GlavnaForma extends javax.swing.JFrame {
 
     private void obradaTabela() {
 
-        List<Korisnik> korisnici = new ArrayList();
+        List<Korisnik> korisnici = null;
+        try {
+            korisnici = DbBroker.vratiIstancu().vratiSveKorisnike();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
         TblModelKorisnici model = new TblModelKorisnici(korisnici);
         tblKorisnici.setModel(model);
     }

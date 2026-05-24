@@ -5,30 +5,31 @@
 
 package komunikacija;
 
-import domen.Admin;
+import domen.Korisnik;
+import java.io.Serializable;
 
 /**
  *
  * @author Aleksandar Čeganjac
  */
-public class Zahtev {
+public class Zahtev implements Serializable{
     
-    Admin korisnik;
+    Korisnik korisnik;
     Operacija operacija;
 
     public Zahtev() {
     }
 
-    public Zahtev(Admin korisnik, Operacija operacija) {
+    public Zahtev(Korisnik korisnik, Operacija operacija) {
         this.korisnik = korisnik;
         this.operacija = operacija;
     }
 
-    public Admin getKorisnik() {
+    public Korisnik getKorisnik() {
         return korisnik;
     }
 
-    public void setKorisnik(Admin korisnik) {
+    public void setKorisnik(Korisnik korisnik) {
         this.korisnik = korisnik;
     }
 
@@ -39,6 +40,8 @@ public class Zahtev {
     public void setOperacija(Operacija operacija) {
         this.operacija = operacija;
     }
+
+   
     
     
 

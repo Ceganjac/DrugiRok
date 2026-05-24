@@ -16,7 +16,7 @@ public class TblModelKorisnici extends AbstractTableModel {
 
     private final List<Korisnik> korisnici;
     private final String[] columnNames = {"Id korisnika", "Korisničko ime", "Lozinka",
-        "Datum rođenja", "Pol"};
+        "Datum rođenja", "Pol","Ulogovan"};
 
     public TblModelKorisnici(List<Korisnik> korisnici) {
         this.korisnici = korisnici;
@@ -29,12 +29,12 @@ public class TblModelKorisnici extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return 5;
+        return korisnici.size();
     }
 
     @Override
     public int getColumnCount() {
-        return korisnici.size();
+        return 6;
     }
 
     @Override
@@ -43,7 +43,12 @@ public class TblModelKorisnici extends AbstractTableModel {
         Korisnik korisnik = korisnici.get(rowIndex);
         switch(columnIndex){
         
-            
+            case 0: return korisnik.getIdKorisnika();
+            case 1: return korisnik.getKorisnickoIme();
+            case 2: return korisnik.getLozinka();
+            case 3: return korisnik.getDatumRodjenja();
+            case 4: return korisnik.getPol();
+            case 5: return korisnik.isUlogovan();
         
         }
         

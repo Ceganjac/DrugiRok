@@ -5,7 +5,13 @@
 package db;
 
 import domen.Admin;
+import domen.Korisnik;
+import domen.Pol;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -15,9 +21,11 @@ public class DbBroker {
 
     private Connection konekcija;
     private static DbBroker instanca;
-    
-    public static DbBroker vratiIstancu(){
-        if (instanca == null) instanca = new DbBroker();
+
+    public static DbBroker vratiIstancu() {
+        if (instanca == null) {
+            instanca = new DbBroker();
+        }
         return instanca;
     }
 
@@ -47,7 +55,7 @@ public class DbBroker {
         ps.setString(2, admin.getLozinka());
 
         ResultSet rs = ps.executeQuery();
-        
+
         if (rs.next()) {
             rez = new Admin();
             rez.setIme(rs.getString("ime"));
@@ -58,10 +66,105 @@ public class DbBroker {
         disconnect();
         return rez;
     }
-    
-    public void dodajKorisnika(){
-    
-        
+
+    public void dodajKorisnika(Korisnik korisnik) throws SQLException {
+
+        connect();
+
+        String upit = "INSERT INTO korisnik(korisnicko_ime,lozinka,"
+                + "datum_rodjenja,pol) VALUES (?,?,?,?)";
+        PreparedStatement ps = konekcija.prepareStatement(upit);
+        ps.setString(1, korisnik.getKorisnickoIme());
+        ps.setString(2, korisnik.getLozinka());
+
+        // datum rođenja
+        Date datumSQL = Date.valueOf(korisnik.getDatumRodjenja());
+        ps.setDate(3, datumSQL);
+
+        // pol
+        String polS = korisnik.getPol().name();
+        ps.setString(4, polS);
+
+        ps.executeUpdate();
+
+    }
+
+    public List<Korisnik> vratiSveKorisnike() throws SQLException {
+
+        connect();
+        String upit = "SELECT * FROM korisnik;";
+        PreparedStatement ps = konekcija.prepareStatement(upit);
+        ResultSet rs = ps.executeQuery();
+
+        List<Korisnik> korisnici = new ArrayList();
+
+        // čitanje podataka upita
+        while (rs.next()) {
+
+            Korisnik korisnik = new Korisnik();
+            korisnik.setIdKorisnika(rs.getInt("id_korisnika"));
+            korisnik.setKorisnickoIme(rs.getString("korisnicko_ime"));
+            korisnik.setLozinka(rs.getString("lozinka"));
+
+            // datumRodjenja
+            Date datumSQL = rs.getDate("datum_rodjenja");
+            LocalDate datumL = datumSQL.toLocalDate();
+            korisnik.setDatumRodjenja(datumL);
+
+            // pol
+            String polS = rs.getString("pol");
+            Pol pol = Pol.valueOf(polS);
+            korisnik.setPol(pol);
+
+            // ulogovan
+            boolean ulogovan = rs.getBoolean("ulogovan");
+            korisnik.setUlogovan(ulogovan);
+
+            korisnici.add(korisnik);
+        }
+
+        disconnect();
+        return korisnici;
+
+    }
+
+    public Korisnik prijavaKorisnik(Korisnik korisnik) throws SQLException {
+
+        connect();
+
+        String upit = "SELECT * FROM korisnik "
+                + "WHERE korisnicko_ime = ? AND lozinka = ?";
+        Korisnik rez = null;
+
+        PreparedStatement ps = konekcija.prepareStatement(upit);
+        ps.setString(1, korisnik.getKorisnickoIme());
+        ps.setString(2, korisnik.getLozinka());
+
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+
+            rez = new Korisnik();
+            rez.setIdKorisnika(rs.getInt("id_korisnika"));
+            rez.setKorisnickoIme(rs.getString("korisnicko_ime"));
+            rez.setLozinka(rs.getString("lozinka"));
+
+            // datum rodjenja
+            Date datumSQL = rs.getDate("datum_rodjenja");
+            LocalDate datumL = datumSQL.toLocalDate();
+            rez.setDatumRodjenja(datumL);
+
+            // pol
+            String polS = rs.getString("pol");
+            rez.setPol(Pol.valueOf(polS));
+
+            // ulogovan
+            rez.setUlogovan(rs.getBoolean("ulogovan"));
+
+        }
+
+        disconnect();
+        return rez;
     }
 
 }

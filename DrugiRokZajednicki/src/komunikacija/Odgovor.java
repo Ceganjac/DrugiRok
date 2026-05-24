@@ -5,31 +5,31 @@
 
 package komunikacija;
 
-import domen.Admin;
+import domen.Korisnik;
+import java.io.Serializable;
 
 /**
  *
  * @author Aleksandar Čeganjac
  */
-public class Odgovor {
+public class Odgovor implements Serializable{
     
-    Admin korisnik;
+    Korisnik korisnik;
     Exception ex;    
 
     public Odgovor() {
     }
-    
 
-    public Odgovor(Admin korisnik, Exception ex) {
+    public Odgovor(Korisnik korisnik, Exception ex) {
         this.korisnik = korisnik;
         this.ex = ex;
     }
 
-    public Admin getKorisnik() {
+    public Korisnik getKorisnik() {
         return korisnik;
     }
 
-    public void setKorisnik(Admin korisnik) {
+    public void setKorisnik(Korisnik korisnik) {
         this.korisnik = korisnik;
     }
 
@@ -40,8 +40,7 @@ public class Odgovor {
     public void setEx(Exception ex) {
         this.ex = ex;
     }
-    
-    
+
     
 
 }

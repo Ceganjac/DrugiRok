@@ -120,10 +120,10 @@ public class PrijavaAdmin extends javax.swing.JDialog {
             return;
         }
 
+        dispose();
         GlavnaForma gf = new GlavnaForma(adminRez);
         gf.setExtendedState(MAXIMIZED_BOTH);
         gf.setVisible(true);
-        dispose();
 
     }//GEN-LAST:event_btnPrijavaActionPerformed
 

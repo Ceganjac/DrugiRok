@@ -4,18 +4,20 @@
  */
 package ui;
 
+import db.DbBroker;
 import domen.Korisnik;
 import domen.Pol;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Aleksandar Čeganjac
  */
 public class DodajKorisnika extends javax.swing.JDialog {
-
 
     /**
      * Creates new form DodajKorisnika
@@ -116,29 +118,48 @@ public class DodajKorisnika extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDodajActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDodajActionPerformed
-        
+
         Korisnik k = new Korisnik();
-        k.setKorisnickoIme(txtKorisnickoIme.getText());
-        k.setLozinka(txtLozinka.getText());
+
+        String korisnickoIme = txtKorisnickoIme.getText();
+        if(korisnickoIme.matches(".*\\d.*")){
+             JOptionPane.showMessageDialog(this, "Korisničko ime ne sme da sadrži broj.",
+                    "GREŠKA", JOptionPane.ERROR_MESSAGE);  
+             return;
+        }
         
+        k.setKorisnickoIme(korisnickoIme);
+        k.setLozinka(txtLozinka.getText());
+
         // datum
         DateTimeFormatter formater = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        LocalDate datumD = LocalDate.parse(txtDatumRodjenja.getText(),formater);
+        LocalDate datumD = LocalDate.parse(txtDatumRodjenja.getText(), formater);
         k.setDatumRodjenja(datumD);
         //
-        
+
         // pol
         k.setPol((Pol) cmbPol.getSelectedItem());
-        
+        //
+        try {
+            DbBroker.vratiIstancu().dodajKorisnika(k);
+            JOptionPane.showMessageDialog(this, "Uspešno dodavanje korisnika.",
+                    "OBAVEŠTENJE", JOptionPane.INFORMATION_MESSAGE);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Greška prilikom dodavanja korisnika.",
+                    "GREŠKA", JOptionPane.ERROR_MESSAGE);
+        }
+
+
     }//GEN-LAST:event_btnDodajActionPerformed
 
-    private void obradaCmbPol(){
-    
+    private void obradaCmbPol() {
+
         DefaultComboBoxModel cmbModel = new DefaultComboBoxModel(Pol.values());
         cmbPol.setModel(cmbModel);
-        
+
     }
-    
+
     /**
      * @param args the command line arguments
      */

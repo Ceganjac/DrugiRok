@@ -4,30 +4,35 @@
  */
 package domen;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  *
  * @author Aleksandar Čeganjac
  */
-public class Korisnik {
+public class Korisnik implements Serializable{
 
     int idKorisnika;
     String korisnickoIme;
     String lozinka;
     LocalDate datumRodjenja;
     Pol pol;
+    boolean ulogovan;
 
     public Korisnik() {
     }
 
-    public Korisnik(int idKorisnika, String korisnickoIme, String lozinka, LocalDate datumRodjenja, Pol pol) {
+    public Korisnik(int idKorisnika, String korisnickoIme, String lozinka, LocalDate datumRodjenja, Pol pol, boolean ulogovan) {
         this.idKorisnika = idKorisnika;
         this.korisnickoIme = korisnickoIme;
         this.lozinka = lozinka;
         this.datumRodjenja = datumRodjenja;
         this.pol = pol;
+        this.ulogovan = ulogovan;
     }
+
+   
 
     public int getIdKorisnika() {
         return idKorisnika;
@@ -68,6 +73,16 @@ public class Korisnik {
     public void setPol(Pol pol) {
         this.pol = pol;
     }
+
+    public boolean isUlogovan() {
+        return ulogovan;
+    }
+
+    public void setUlogovan(boolean ulogovan) {
+        this.ulogovan = ulogovan;
+    }
+    
+    
     
     
 
